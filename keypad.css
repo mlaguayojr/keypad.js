@@ -5,7 +5,7 @@ div.keypad {
     width: fit-content;
 }
 
-div.keypad > button {
+div.keypad > div > button {
     border: 1px solid lightgray;
     padding: 11px;
     margin: 3px;

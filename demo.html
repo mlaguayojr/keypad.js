@@ -3,15 +3,18 @@
         <link rel="stylesheet" type="text/css" href="keypad.css">
     </head>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
     <body>
-        <div data-type="keypad" data-desc="Password 1"></div>
+        <div id="test" data-desc="Password 1"></div>
         <br>
-        <div data-type="keypad" data-desc="Password 2"></div>
-        <br>
-        <div data-type="keypad"></div>
+        <div id="example3"></div>
     </body>
 
     <script src="keypad.js"></script>
-    <script>new Keypad(limit=10);</script>
+    <script>
+        $("#test").keypad({type: "text", limit: 5, shuffle: true});
+        $("#example3").keypad({type: "text"});
+    </script>
     
 </html>

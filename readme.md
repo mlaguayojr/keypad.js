@@ -1,5 +1,5 @@
 # Keypad.js
-Create randomized numeric keypads on page load with vanilla javascript.
+a jQuery plugin that creates a keypad/pinpad popup.
 
 ## Files
 1. "keypad.css" contains the basic styling
@@ -7,31 +7,24 @@ Create randomized numeric keypads on page load with vanilla javascript.
 
 ## How To
 Create your element with atleast these attributes
+
 ```html
-<div data-type="keypad" data-desc="Password 1"></div>
+<div id="keypad1" data-desc="Password 1"></div>
 ```
-> data-type(required): must be "keypad"
 > data-desc(optional): describe what this keypad is for
 
+### Import
 ```html
 <script src="keypad.js"></script>
 ```
 > import script like normal javascript
 
-```html
-<script>new Keypad();</script>
+### Constructor / Syntax
+```js
+$("#test").keypad({type: "text", limit: 5, shuffle: true});
 ```
-> initialize Keypad
+> type: this is based off of the input type (text, password, etc.). The default is password.
 
-## Syntax
-By default, Keypad sets the character limit to 4. You can change it to however long by doing
+> limit: the max number of numbers allowed. The default is 4.
 
-```javascript
-new Keypad(limit=10);
-```
-
-## Going further
-Things I would like to implement later on:
-* add more configuration (parameters or based on data-* attributes)
-* (parameter based) individually based on elements (the codes there)
-* (parameter based) everytime i click on the "base" element, randomize keypad buttons
+> shuffle: reassign the buttons to new random values. The default is false.

@@ -1,107 +1,120 @@
-class Keypad {
+/**
+ * Keypad.js JQuery Plugin
+ * Mario Luis Aguayo Jr 2019
+ */
 
-    constructor(limit=4){
-        (document.querySelectorAll("div[data-type='keypad']")).forEach(element => {
-            this.createInstance(element, limit);
-        });
-    }
+(function($){
+    
+    $.fn.extend({
 
-    createInstance(element, limit) {
-        var element = element;
-        var timestamp = Date.now();
+        keypad: function(options){
 
-        var keypad = this.createKeypad(timestamp, element.getAttribute('data-desc'), limit);
+            var options = $.extend({
+                type: "password",
+                limit: 4,
+                shuffle: false,
+            }, options);
 
-        var input = this.createTempInput(timestamp);
-        input.onfocus = function(){
-            keypad.style.display = "block";
-            document.getElementById(`${timestamp}Temp`).focus();
-        }
+            var timestamp = Date.now();
 
-        element.appendChild(input);
-        element.appendChild(keypad);
-    }
+            var output = document.createElement("input");
+            output.id = timestamp;
+            output.type = options.type;
+            output.maxLength = options.limit;
+            output.readOnly = true;
 
-    createTempInput(id) {
-        var input = document.createElement("input");
-        input.type = "password";
-        input.id = id;
-        return input;
-    }
+            var container = document.createElement("div");
+            container.classList = ["keypad"];
+            container.style.display = "none";
 
-    createKeypad(id, desc=null, limit) {
-        var keypad = document.createElement("div");
-        keypad.classList = ["keypad"];
-        keypad.style.display = "none";
-
-        if(desc != null){
-            var p = document.createElement("label");
-            p.innerText = `${desc}:`;
-            keypad.appendChild(p);
-            keypad.appendChild(document.createElement("br"));
-        }
-
-        var value = document.createElement("input");
-        value.type = "password";
-        value.id = `${id}Temp`;
-
-        keypad.appendChild(value);
-        keypad.appendChild(document.createElement("br"));
-
-        var numbers = [];
-        while(numbers.length != 10){
-            var x = Math.floor(Math.random() * 10);
-            if( numbers.indexOf(x) == -1){
-                numbers.push(x);
-            }
-        }
-
-        numbers.forEach( (n, i) => {
-            var b = document.createElement("button");
-            b.value = n;
-            b.innerText = n;
-
-            b.onclick = function(){
-                if (value.value.length == limit){
-                    var t = value.value.slice(1, limit);
-                    value.value = t;
-                }
-                value.value = value.value + n;
+            output.onfocus = function(){
+                container.style.display = "block";
             }
             
-            if ( ( (i % 3) == 0) && (i >= 3) ) {
-                keypad.appendChild(document.createElement("br"));
+            if ( $(this).attr("data-desc") != undefined ) {
+                var description = document.createElement("label");
+                description.innerText = ( $(this).attr("data-desc") || "" );
+                container.appendChild(description);
+                container.appendChild(document.createElement("br"));
+                container.appendChild(document.createElement("br"));
             }
 
-            keypad.appendChild(b);
-        });
+            var pad = document.createElement("div");
 
-        var deleteKey = document.createElement("button");
+            ($.fn.shuffleNumbers()).forEach( (n, i) => {
+                var b = document.createElement("button");
+                b.value = n;
+                b.innerText = n;
 
-        deleteKey.innerHTML = "&#10005;";
-        deleteKey.title = "Delete last entered key";
+                b.onclick = function(){
+                    if (output.value.length == options.limit){
+                        var t = output.value.slice(1, options.limit);
+                        output.value = t;
+                    }
+                    output.value = output.value + n;
+                }
+                
+                if ( ( (i % 3) == 0) && (i >= 3) ) {
+                    pad.appendChild(document.createElement("br"));
+                }
 
-        deleteKey.onclick = function(){
-            value.value = value.value.slice(0, value.value.length - 1);
+                pad.appendChild(b);
+            });
+
+            var deleteKey = document.createElement("button");
+
+            deleteKey.innerHTML = "&#10005;";
+            deleteKey.title = "Delete last entered key";
+
+            deleteKey.onclick = function(){
+                output.value = output.value.slice(0, output.value.length - 1);
+            }
+
+            var submitKey = document.createElement("button");
+            
+            submitKey.innerHTML = "&#10003;";
+            submitKey.title = "Submit";
+
+            submitKey.onclick = function(){
+                container.style.display = "none";
+                $(this).defaultValue = output.value;
+
+                if (options.shuffle){
+                    var temp = $.fn.shuffleNumbers();
+                    (pad.childNodes).forEach((n, i) => {
+                        if( i < 10 ){
+                            n.value = temp[i];
+                            n.textContent = temp[i];
+
+                            n.onclick = function(){
+                                if (output.value.length == options.limit){
+                                    var t = output.value.slice(1, options.limit);
+                                    output.value = t;
+                                }
+                                output.value = output.value + temp[i];
+                            }
+                        }
+                    });
+                }
+            }
+
+            pad.appendChild(deleteKey);
+            pad.appendChild(submitKey);
+            container.appendChild(pad);
+
+            $(this).append(output);
+            $(this).append(container);
+        },
+        shuffleNumbers: function() {
+            var numbers = [];
+            while(numbers.length != 10){
+                var x = Math.floor(Math.random() * 10);
+                if( numbers.indexOf(x) == -1){
+                    numbers.push(x);
+                }
+            }
+            return numbers;
         }
+    });
 
-        keypad.appendChild(deleteKey);
-
-        var submitKey = document.createElement("button");
-        
-        submitKey.innerHTML = "&#10003;";
-        submitKey.title = "Submit";
-
-        submitKey.onclick = function(){
-            console.log("Before: " + document.getElementById(id).defaultValue);
-            keypad.style.display = "none";
-            document.getElementById(id).defaultValue = value.value;
-            console.log("Now: " + document.getElementById(id).defaultValue);
-        }
-
-        keypad.appendChild(submitKey);
-
-        return keypad;
-    }
-
-}
+}(jQuery));
