@@ -41,7 +41,9 @@
 
             var pad = document.createElement("div");
 
-            ($.fn.shuffleNumbers()).forEach( (n, i) => {
+            var numbers = this.getNumbers();
+
+            (numbers).forEach( (n, i) => {
                 var b = document.createElement("button");
                 b.value = n;
                 b.innerText = n;
@@ -78,9 +80,11 @@
             submitKey.onclick = function(){
                 container.style.display = "none";
                 $(this).defaultValue = output.value;
-
+                
                 if (options.shuffle){
-                    var temp = $.fn.shuffleNumbers();
+
+                    var temp = $.fn.getNumbers(true);
+
                     (pad.childNodes).forEach((n, i) => {
                         if( i < 10 ){
                             n.value = temp[i];
@@ -105,14 +109,16 @@
             $(this).append(output);
             $(this).append(container);
         },
-        shuffleNumbers: function() {
-            var numbers = [];
-            while(numbers.length != 10){
-                var x = Math.floor(Math.random() * 10);
-                if( numbers.indexOf(x) == -1){
-                    numbers.push(x);
+        getNumbers: function(shuffled=false) {
+            var numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+            if(shuffled) {
+                for (let i = 9; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
                 }
             }
+            
             return numbers;
         }
     });
