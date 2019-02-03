@@ -6,15 +6,30 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 
     <body>
-        <div id="test" data-desc="Password 1"></div>
+        <label>Example 1: Defaults</label>
+        <div id="example1"></div>
         <br>
+        <label>Example 2: Text Type</label>
+        <div id="example2"></div>
+        <br>
+        <label>Example 3: Increased Limit</label>
         <div id="example3"></div>
+        <br>
+        <label>Example 4: One Time Shuffled Keypad</label>
+        <div id="example4"></div>
+        <br>
+        <label>Example 5: Shuffle Everytime Keypad</label>
+        <div id="example5"></div>
+        <br>
     </body>
 
     <script src="keypad.js"></script>
     <script>
-        $("#test").keypad({type: "text", limit: 5, shuffle: true});
-        $("#example3").keypad({type: "text"});
+        $("#example1").keypad();
+        $("#example2").keypad({type: "text"});
+        $("#example3").keypad({type: "text", limit: 10});
+        $("#example4").keypad({type: "text", shuffle: true});
+        $("#example5").keypad({type: "text", shuffle: "always"});
     </script>
     
 </html>
